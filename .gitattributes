@@ -1,0 +1,2 @@
+openkylin-v2/openkylin-V2.tar.xz filter=lfs diff=lfs merge=lfs -text
+openkylin-v2/back_base_file/openkylin-V2.tar.xz filter=lfs diff=lfs merge=lfs -text

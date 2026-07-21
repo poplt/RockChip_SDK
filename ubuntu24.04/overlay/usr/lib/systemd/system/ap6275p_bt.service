@@ -1,0 +1,11 @@
+[Unit]
+Description = ap6275p bluetooth daemon
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/lib/firmware/ap6275p_bt.sh
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

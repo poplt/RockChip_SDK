@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+#    10-help-text - print the help text associated with the distro
+
+printf "\n"
+printf " * Documentation:  https://ubuntu.com/\n"
+printf " * Management:     https://ubuntu.com/\n"
+
+if [ -e /boot/boot_init ];then 
+    source /etc/init.d/boot_init.sh > /dev/null 2>&1
+    
+    # 1. 动态获取真实的芯片型号
+    SOC_type=$(cat /proc/device-tree/compatible | cut -d,  -f 3 | sed 's/\x0//g')
+    echo " * Board Name:     $SOC_type"
+    
+    # 2. 动态获取文件系统名称 (如 Ubuntu 22.04.5 LTS)
+    . /etc/os-release
+    FILESYSTEM_NAME="$PRETTY_NAME"
+    
+    # 3. 动态获取桌面环境 (如 Ubuntu:GNOME)
+    DESKTOP_ENV=$(echo $XDG_CURRENT_DESKTOP)
+    
+    # 4. 动态获取内核日期 (使用 cut 提取日期字段，如 Mon May 27 10:00:00 CST 2024)
+    KERNEL_DATE=$(uname -v | cut -d' ' -f2-5,7)
+    
+    # 打印整合后的信息
+    echo " * Build Info:     $SOC_type / $FILESYSTEM_NAME / $DESKTOP_ENV / $KERNEL_DATE"
+fi
+
+printf "\n"
