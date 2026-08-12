@@ -69,6 +69,11 @@
 /* Serial flags */
 /* Clock non-continuous mode support. */
 #define V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK	BIT(0)
+/* CSI-2 Virtual Channel identifiers. */
+#define V4L2_MBUS_CSI2_CHANNEL_0                BIT(4)
+#define V4L2_MBUS_CSI2_CHANNEL_1                BIT(5)
+#define V4L2_MBUS_CSI2_CHANNEL_2                BIT(6)
+#define V4L2_MBUS_CSI2_CHANNEL_3                BIT(7)
 
 #define V4L2_MBUS_CSI2_MAX_DATA_LANES		8
 

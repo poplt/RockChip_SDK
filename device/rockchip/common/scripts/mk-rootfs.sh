@@ -267,6 +267,49 @@ build_ubuntu()
 	finish_build build_ubuntu $@
 }
 
+build_openkylin()
+{
+	check_config RK_OPENKYLIN || false
+
+	IMAGE_DIR="${1:-$RK_OUTDIR/openkylin}"
+	ARCH=${RK_OPENKYLIN_ARCH:-arm64}
+
+	# "$RK_SCRIPTS_DIR/check-openkylin.sh"
+
+	message "=========================================="
+	message "          Start building $RK_OPENKYLIN_VERSION($ARCH)"
+	message "=========================================="
+
+	cd "$RK_OPENKYLIN_NUMBER"
+
+	## Not always using full build
+	if [ -f $RK_ROOTFS_IMAGE ]; then
+	# image build with SDK
+		notice "[    Already Exists IMG,  Skip Make openkylin Scripts    ]"
+		notice "[ Delate $RK_ROOTFS_IMAGE To Rebuild openkylin IMG ]"
+		ln -rsf "$PWD/$RK_ROOTFS_IMAGE" "$IMAGE_DIR/rootfs.ext4"
+	elif [ -f openkylin-$RK_ROOTFS_TARGET-rootfs.img  ]; then
+	# image build with openkylin scripts
+		notice Use openkylin-$RK_ROOTFS_TARGET-rootfs.img to build update.img
+		ln -rsf "$PWD/openkylin-$RK_ROOTFS_TARGET-rootfs.img" \
+			"$IMAGE_DIR/rootfs.ext4"
+	else
+	# building iamge
+		notice "No $RK_ROOTFS_IMAGE, Run Make openkylin Scripts"
+			if [ ! -f openkylin-base-$RK_ROOTFS_TARGET-$ARCH-*.tar.gz ]; then
+				notice "build openkylin-base-$RK_ROOTFS_TARGET-$ARCH-*.tar.gz"
+				TARGET=$RK_ROOTFS_TARGET ARCH=$ARCH ./mk-base-openkylin.sh
+			fi
+		TARGET=$RK_ROOTFS_TARGET VERSION=$RK_ROOTFS_DEBUG \
+		RK_ROOTFS_IMAGE=$RK_ROOTFS_IMAGE SOC=$RK_CHIP ARCH=$ARCH \
+			./mk-openkylin-rootfs.sh
+		ln -rsf "$PWD/$RK_ROOTFS_IMAGE" "$IMAGE_DIR/rootfs.ext4"
+	fi
+
+	finish_build build_openkylin $@
+}
+
+
 # Hooks
 
 usage_hook()
@@ -365,7 +408,7 @@ pre_build_hook()
 	esac
 }
 
-BUILD_CMDS="rootfs buildroot debian ubuntu yocto"
+BUILD_CMDS="rootfs buildroot debian ubuntu yocto openkylin"
 build_hook()
 {
 	check_config RK_ROOTFS || false
@@ -385,7 +428,7 @@ build_hook()
 	message "=========================================="
 
 	case "$ROOTFS" in
-		yocto | debian | ubuntu | buildroot) ;;
+		yocto | debian | ubuntu | openkylin | buildroot) ;;
 		*) usage ;;
 	esac
 
@@ -399,6 +442,7 @@ build_hook()
 		debian) build_debian "$IMAGE_DIR" ;;
 		ubuntu) build_ubuntu "$IMAGE_DIR" ;;
 		buildroot) build_buildroot "$IMAGE_DIR" ;;
+		openkylin) build_openkylin "$IMAGE_DIR" ;;
 	esac
 	touch "$ROOTFS_DIR/.stamp_build_finish"
 

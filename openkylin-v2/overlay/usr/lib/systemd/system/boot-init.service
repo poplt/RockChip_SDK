@@ -1,0 +1,13 @@
+[Unit]
+Description=Rockchip boot init
+DefaultDependencies=no
+After=local-fs.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/init.d/boot_init.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

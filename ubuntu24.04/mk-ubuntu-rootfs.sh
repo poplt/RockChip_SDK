@@ -11,12 +11,14 @@ if [ ! $SOC ]; then
     echo "请输入要构建CPU的序号:"
     echo "[0] Exit Menu"
     echo "[1] rk3588/rk3588s"
+    echo "[2] rk3576"
     echo "---------------------------------------------------------"
     read input
 
     case $input in
         0)  exit ;;
         1)  SOC=rk3588 ;;
+        2)  SOC=rk3576 ;;
         *)  echo 'input soc number error, exit !'
             exit;;
     esac
@@ -47,8 +49,9 @@ fi
 install_packages() {
     case $SOC in
         rk3576)
-        MALI=bifrost-g52-g13p0
-        MALI_PKG=libmali-*$MALI*-x11-wayland-gbm*
+        # MALI=bifrost-g52-g13p0
+        # MALI_PKG=libmali-*$MALI*-x11-wayland-gbm*
+        echo -e "\033[47;36m 默认选择开源GPU驱动跳过MALI \033[0m"
         ISP=rkaiq_rk3576
         ;;
         rk3588|rk3588s)
@@ -175,6 +178,10 @@ export APT_INSTALL="apt-get install -fy --allow-downgrades"
 # \${APT_INSTALL} /packages/embedfire/scratch_*.deb
 
 \${APT_INSTALL} fire-config-gui
+
+echo -e "\033[47;36m ------ 安装常用调试工具 ------- \033[0m"
+\${APT_INSTALL} gpiod i2c-tools stress sysbench memtester
+
 
 echo -e "\033[47;36m ---------- 安装内核包 -------- \033[0m"
 \${APT_INSTALL} /boot/kerneldeb/* || true

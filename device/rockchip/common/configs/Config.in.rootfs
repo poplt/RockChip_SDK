@@ -14,6 +14,7 @@ source "Config.in.buildroot"
 source "Config.in.yocto"
 source "Config.in.debian"
 source "Config.in.ubuntu"
+source "Config.in.openkylin"
 
 config RK_ROOTFS_SYSTEM
 	string
@@ -21,6 +22,7 @@ config RK_ROOTFS_SYSTEM
 	default "debian" if RK_ROOTFS_SYSTEM_DEBIAN
 	default "ubuntu" if RK_ROOTFS_SYSTEM_UBUNTU
 	default "yocto" if RK_ROOTFS_SYSTEM_YOCTO
+	default "openkylin" if RK_ROOTFS_SYSTEM_OPENKYLIN
 
 choice
 	prompt "default rootfs system"
@@ -43,6 +45,10 @@ config RK_ROOTFS_SYSTEM_YOCTO
 	bool "Yocto"
 	depends on RK_YOCTO
 
+config RK_ROOTFS_SYSTEM_OPENKYLIN
+	bool "openKylin"
+	depends on RK_OPENKYLIN
+
 endchoice # default rootfs
 
 config RK_ROOTFS_INITRD
@@ -51,7 +57,7 @@ config RK_ROOTFS_INITRD
 	depends on RK_ROOTFS_EXT2 || RK_ROOTFS_SQUASHFS || RK_ROOTFS_ROMFS || \
 		RK_ROOTFS_CPIO || RK_ROOTFS_CPIO_GZ
 
-if RK_ROOTFS_SYSTEM="debian" || RK_ROOTFS_SYSTEM="ubuntu"
+if RK_ROOTFS_SYSTEM="debian" || RK_ROOTFS_SYSTEM="ubuntu" || RK_ROOTFS_SYSTEM="openkylin"
 
 config RK_ROOTFS_TARGET
 	string
@@ -101,6 +107,7 @@ config RK_ROOTFS_IMAGE
 	string "rootfs image name"
 	default "linaro-${RK_CHIP}-${RK_ROOTFS_TARGET}-rootfs.img" if RK_ROOTFS_SYSTEM_DEBIAN
 	default "ubuntu-${RK_CHIP}-${RK_ROOTFS_TARGET}-rootfs.img" if RK_ROOTFS_SYSTEM_UBUNTU
+	default "openkylin-${RK_CHIP}-${RK_ROOTFS_TARGET}-rootfs.img" if RK_ROOTFS_SYSTEM_OPENKYLIN
 	default ""
 
 endif

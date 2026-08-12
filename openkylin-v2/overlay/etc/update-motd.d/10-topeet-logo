@@ -1,0 +1,8 @@
+#!/bin/bash
+KERNELID=$(uname -r)
+BOARD_NAME="Linux-RK3588"
+toilet -f standard -F metal $(echo $BOARD_NAME)
+echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+echo performance > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+echo performance > /sys/devices/system/cpu/cpufreq/policy6/scaling_governor
+echo performance > /sys/devices/platform/fb000000.gpu/devfreq/fb000000.gpu/governor

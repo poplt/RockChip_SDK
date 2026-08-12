@@ -1,0 +1,55 @@
+#
+
+config RK_OPENKYLIN_SUPPORTS
+	bool
+	default y if \
+		RK_CHIP_FAMILY = "rk3566_rk3568" || RK_CHIP_FAMILY = "rk3588" || \
+		RK_CHIP_FAMILY = "rk3562" || RK_CHIP_FAMILY = "rk3528" || \
+		RK_CHIP_FAMILY = "rk3576"
+
+comment "Openkylin is not supported for this chip"
+	depends on !RK_OPENKYLIN_SUPPORTS
+
+menuconfig RK_OPENKYLIN
+	bool "Openkylin"
+	depends on RK_OPENKYLIN_SUPPORTS
+	default y
+
+if RK_OPENKYLIN
+
+config RK_OPENKYLIN_VERSION
+	string
+	default "focal" if RK_OPENKYLIN_FOCAL
+
+config RK_OPENKYLIN_NUMBER
+	string
+	default "openkylin-v2" if RK_OPENKYLIN_FOCAL
+
+choice
+	prompt "distro"
+	default RK_OPENKYLIN_FOCAL
+
+config RK_OPENKYLIN_FOCAL
+	bool "focal"
+
+endchoice # distro
+
+config RK_OPENKYLIN_ARCH
+	string
+	default "armhf" if RK_OPENKYLIN_ARMHF
+	default "arm64" if RK_OPENKYLIN_ARM64
+
+choice
+	prompt "rootfs arch"
+
+config RK_OPENKYLIN_ARM64
+	bool "arm64"
+	depends on !RK_CHIP_ARM32
+
+config RK_OPENKYLIN_ARMHF
+	bool "armhf"
+
+endchoice # rootfs arch
+
+endif # Debian
+endmenuconfig # Debian

@@ -1,5 +1,4 @@
 #!/bin/bash
-
 killall -q -9 brcm_patchram_plus1 || true
 
 echo 0 | tee /sys/class/rfkill/rfkill0/state >/dev/null
