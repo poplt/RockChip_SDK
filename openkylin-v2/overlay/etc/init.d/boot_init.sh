@@ -103,25 +103,25 @@ if [ ! -e "/boot/boot_init" ]; then
         done
         rm -f /tmp/.test_write
 
-        # 2. 将 deb 包移动到 /tmp
-        mv /boot/kerneldeb/*.deb /tmp/ || echo "No deb files to move"
+        # # 2. 将 deb 包移动到 /tmp
+        # mv /boot/kerneldeb/*.deb /tmp/ || echo "No deb files to move"
 
-        # 3. 等待 dpkg 锁释放（防止与其他启动服务冲突）
-        while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
-            echo "Waiting for dpkg lock..."
-            sleep 1
-        done
+        # # 3. 等待 dpkg 锁释放（防止与其他启动服务冲突）
+        # while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
+        #     echo "Waiting for dpkg lock..."
+        #     sleep 1
+        # done
 
-        # 4. 从 /tmp 安装 deb 包
-        apt install -fy --allow-downgrades /tmp/*.deb || true
+        # # 4. 从 /tmp 安装 deb 包
+        # apt install -fy --allow-downgrades /tmp/*.deb || true
 
-        # 5. 安装完成后清理
-        rm -f /tmp/*.deb
-        # ==================== 增强版修改结束 ====================
+        # # 5. 安装完成后清理
+        # rm -f /tmp/*.deb
+        # # ==================== 增强版修改结束 ====================
 
-        apt-mark hold \
-            linux-headers-$(uname -r) \
-            linux-image-$(uname -r) || true
+        # apt-mark hold \
+        #     linux-headers-$(uname -r) \
+        #     linux-image-$(uname -r) || true
         #
         # 已识别板型才切换 DTB
         #
@@ -140,11 +140,11 @@ if [ ! -e "/boot/boot_init" ]; then
 
         touch /boot/boot_init
 
-        rm -f /boot/kerneldeb/*
+        # rm -f /boot/kerneldeb/*
         cp -f /boot/logo_kernel.bmp /boot/logo.bmp
 
         sync
-        # reboot
+        reboot
 
     else
 

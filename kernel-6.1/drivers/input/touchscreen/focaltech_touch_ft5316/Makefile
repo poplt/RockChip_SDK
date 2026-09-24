@@ -1,0 +1,1 @@
+obj-$(CONFIG_TOUCHSCREEN_FT5316)   += ft5316_ts.o

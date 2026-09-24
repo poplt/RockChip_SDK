@@ -75,7 +75,7 @@ do_build_extboot()
 	echo -e "label kernel-$KERNEL_VER" >> $EXTBOOT_DIR/extlinux/extlinux.conf
 	echo -e "\tkernel /Image-$KERNEL_VER" >> $EXTBOOT_DIR/extlinux/extlinux.conf
 	echo -e "\tdevicetreedir /" >> $EXTBOOT_DIR/extlinux/extlinux.conf
-	echo -e "\tappend  root=/dev/mmcblk0p3 earlyprintk console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=7 rootwait rw rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 switolb=1 coherent_pool=1m" >> $EXTBOOT_DIR/extlinux/extlinux.conf
+	echo -e "\tappend  root=/dev/mmcblk0p3 earlycon=uart8250,mmio32,0xfeb50000,1500000n8 console=ttyS2,1500000n8 console=tty1 consoleblank=0 loglevel=8 ignore_loglevel rootwait rw rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 switolb=1 coherent_pool=1m" >> $EXTBOOT_DIR/extlinux/extlinux.conf
 
 	cp ${RK_SDK_DIR}/${RK_KERNEL_DTS_DIR}/*.dtb $EXTBOOT_DTB_DIR
 	cp ${RK_SDK_DIR}/${RK_KERNEL_DTS_DIR}/overlay/*.dtbo $EXTBOOT_DTB_DIR/overlay
@@ -105,8 +105,8 @@ do_build_extboot()
 	cp ${RK_SDK_DIR}/kernel/logo_boot.bmp $EXTBOOT_DIR/logo.bmp
 
 	if [ $RK_ROOTFS_SYSTEM == "ubuntu" ] || [ $RK_ROOTFS_SYSTEM == "debian" ]; then
-		cp ${RK_SDK_DIR}/linux-headers-"$KERNEL_VER"_"$KERNEL_VER"-*.deb $EXTBOOT_DIR/kerneldeb
-		cp ${RK_SDK_DIR}/linux-image-"$KERNEL_VER"_"$KERNEL_VER"-*.deb $EXTBOOT_DIR/kerneldeb
+		cp ${RK_SDK_DIR}/linux-headers-"$KERNEL_VER"_*.deb $EXTBOOT_DIR/kerneldeb
+		cp ${RK_SDK_DIR}/linux-image-"$KERNEL_VER"_*.deb $EXTBOOT_DIR/kerneldeb
 	fi
 
 	rm -rf $EXTBOOT_IMG && truncate -s 128M $EXTBOOT_IMG

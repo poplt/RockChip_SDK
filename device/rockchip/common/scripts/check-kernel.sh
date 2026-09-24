@@ -41,9 +41,17 @@ if [ -r "kernel/.config" ]; then
 		exit 1
 	fi
 
-	# For bypassing DRM permision checks.
-	if grep -q "CONFIG_DRM=y" kernel/.config &&
-		! grep -q "CONFIG_DRM_IGNORE_IOTCL_PERMIT=y" kernel/.config; then
+	# For bypassing DRM permission checks.
+	# CONFIG_DRM_IGNORE_IOTCL_PERMIT exists in Rockchip 6.1 vendor kernel,
+	# but is not available in kernel 7.1.
+	#
+	# Panfrost/Panthor do not require CONFIG_DRM_IGNORE_IOTCL_PERMIT,
+	# so allow it to be disabled when either GPU driver is enabled.
+
+	if [ "$RK_KERNEL_VERSION" != "7.1" ] &&
+		grep -q "CONFIG_DRM=y" kernel/.config &&
+		! grep -q "CONFIG_DRM_IGNORE_IOTCL_PERMIT=y" kernel/.config &&
+		! grep -qE '^CONFIG_DRM_PANFROST=y|^CONFIG_DRM_PANTHOR=y' kernel/.config; then
 		echo -e "\e[35m"
 		echo "Please enable CONFIG_DRM_IGNORE_IOTCL_PERMIT in kernel."
 		echo -e "\e[0m"
@@ -79,7 +87,8 @@ if [ -r "kernel/.config" ]; then
 	[ -z "$RK_USB_SERIAL" ] || check_usb_gadget gser CONFIG_USB_CONFIGFS_SERIAL
 fi
 
-if ! kernel/scripts/mkbootimg &>/dev/null; then
+# Kernel 7.1: skip legacy python3/mkbootimg version check.
+if [ "$RK_KERNEL_VERSION" != "7.1" ] && ! kernel/scripts/mkbootimg &>/dev/null; then
 	echo -e "\e[35m"
 	echo "Your python3 is too old for kernel: $(python3 --version)"
 	echo "Please update it:"

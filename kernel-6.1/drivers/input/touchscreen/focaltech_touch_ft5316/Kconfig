@@ -1,0 +1,7 @@
+config TOUCHSCREEN_FT5316
+        tristate "focaltech ft5316"
+	depends on I2C
+	default n
+	help
+	  Say Y here if you have FT5316 touch panel.
+	  If unsure, say N.

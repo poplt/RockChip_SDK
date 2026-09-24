@@ -1485,5 +1485,6 @@ config TOUCHSCREEN_MEDIATEK
 
 source "drivers/input/touchscreen/hxchipset/Kconfig"
 source "drivers/input/touchscreen/jdchipset/Kconfig"
+source "drivers/input/touchscreen/focaltech_touch_ft5316/Kconfig"
 
 endif
